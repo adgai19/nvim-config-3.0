@@ -72,5 +72,28 @@ vim.o.scrolloff = 10
 -- instead raise a dialog asking if you wish to save the current file(s)
 -- See `:help 'confirm'`
 vim.o.confirm = true
+-- Toggle relative numbers automatically
+vim.api.nvim_create_augroup('numbertoggle', { clear = true })
 
+vim.api.nvim_create_autocmd({ 'BufEnter', 'FocusGained', 'InsertLeave', 'WinEnter' }, {
+  group = 'numbertoggle',
+  callback = function()
+    if vim.wo.number and vim.api.nvim_get_mode().mode ~= 'i' then
+      vim.wo.relativenumber = true
+    end
+  end,
+})
+
+vim.api.nvim_create_autocmd({ 'BufLeave', 'FocusLost', 'InsertEnter', 'WinLeave' }, {
+  group = 'numbertoggle',
+  callback = function()
+    if vim.wo.number then
+      vim.wo.relativenumber = false
+    end
+  end,
+})
+vim.o.tabstop = 2 -- A TAB character looks like 4 spaces
+vim.o.expandtab = true -- Pressing the TAB key will insert spaces instead of a TAB character
+vim.o.softtabstop = 2 -- Number of spaces inserted instead of a TAB character
+vim.o.shiftwidth = 2 -- Number of spaces inserted when indenting
 -- vim: ts=2 sts=2 sw=2 et
